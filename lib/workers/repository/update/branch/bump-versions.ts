@@ -17,6 +17,7 @@ type ParseFileChangesResult =
   | { state: 'unmodified' };
 
 export async function bumpVersions(config: BranchConfig): Promise<void> {
+  logger.debug(`xxxx bumpVersions started`);
   const bumpVersions = config.bumpVersions;
   if (!bumpVersions?.length) {
     return;
