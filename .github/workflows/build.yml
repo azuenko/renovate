@@ -595,7 +595,7 @@ jobs:
       - name: push-docker
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
-          pnpm build:docker push --version 1.0.0
+          docker push ghcr.io/azuenko/renovate:1.0.0
 
   build-docs:
     needs:
