@@ -579,7 +579,7 @@ jobs:
           os: ${{ runner.os }}
 
       - name: Build docker
-        run: pnpm build:docker build --tries=3 --args '--load'
+        run: pnpm build:docker build --tries=3 --version 1.0.0 --args '--load'
         env:
           LOG_LEVEL: debug
 
@@ -591,6 +591,11 @@ jobs:
         run: docker run -e LOG_LEVEL=debug -e RENOVATE_TOKEN --rm renovate/renovate --dry-run=lookup ${{ github.repository }}
         env:
           RENOVATE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: push-docker
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+          pnpm build:docker push --version 1.0.0
 
   build-docs:
     needs:

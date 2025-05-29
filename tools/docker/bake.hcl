@@ -1,5 +1,5 @@
 variable "OWNER" {
-  default = "renovatebot"
+  default = "azuenko"
 }
 variable "FILE" {
   default = "renovate"
