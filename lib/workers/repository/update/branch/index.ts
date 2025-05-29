@@ -140,6 +140,7 @@ export async function processBranch(
     config.baseBranch,
   );
   logger.debug(`branchExists=${branchExists}`);
+  logger.debug(`xxxx branchExists=${branchExists}`);
   const dependencyDashboardCheck =
     config.dependencyDashboardChecks?.[config.branchName];
   logger.debug(`dependencyDashboardCheck=${dependencyDashboardCheck!}`);
