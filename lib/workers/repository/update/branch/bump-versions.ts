@@ -107,7 +107,7 @@ async function bumpVersion(
       // extracting the version from the file
       const regexResult = matchStringRegex.exec(fileContents);
       if (!regexResult) {
-        logger.debug(`xxxx no match for file ${filePath} and regex ${matchStringRegex}`);
+        logger.debug(`xxxx no match for file ${filePath} and regex ${matchStringRegex}, file contents ${fileContents} end of file contents`);
         continue;
       }
       const version = regexResult.groups?.version;
