@@ -20,11 +20,13 @@ export async function bumpVersions(config: BranchConfig): Promise<void> {
   logger.debug(`xxxx bumpVersions started`);
   const bumpVersions = config.bumpVersions;
   if (!bumpVersions?.length) {
+    logger.debug(`xxxx return from bv length`);
     return;
   }
 
   // skip if no packageFiles or artifacts have been updated
   if (!config.updatedPackageFiles?.length && !config.updatedArtifacts?.length) {
+    logger.debug(`xxxx return from no updated artifacts`);
     return;
   }
 
@@ -56,6 +58,8 @@ async function bumpVersion(
   packageFiles: Record<string, FileChange[]>,
   artifactFiles: Record<string, FileChange[]>,
 ): Promise<void> {
+
+  logger.debug(`xxxx bumpVersion started for ${fileList} ${packageFiles} ${artifactFiles}`);
   const bumpVersionsDescr = config.name
     ? `bumpVersions(${config.name})`
     : 'bumpVersions';
@@ -68,8 +72,10 @@ async function bumpVersion(
       branchConfig,
       `Failed to calculate matched files for bumpVersions: ${e.message}`,
     );
+    logger.debug(`xxxx return artifact error`);
     return;
   }
+  logger.debug(`xxxx files ${files}`);
   // prepare the matchStrings
   const matchStringsRegexes: RegExp[] = [];
   for (const matchString of config.matchStrings) {
@@ -95,11 +101,13 @@ async function bumpVersion(
     if (!fileContents) {
       continue;
     }
+    logger.debug(`xxxx matchStringsRegexes: ${matchStringsRegexes}`);
 
     for (const matchStringRegex of matchStringsRegexes) {
       // extracting the version from the file
       const regexResult = matchStringRegex.exec(fileContents);
       if (!regexResult) {
+        logger.debug(`xxxx no match for file ${file} and regex ${matchStringRegex}`);
         continue;
       }
       const version = regexResult.groups?.version;
@@ -122,6 +130,7 @@ async function bumpVersion(
           `Failed to calculate new version for ${bumpVersionsDescr}: ${e.message}`,
           filePath,
         );
+        logger.debug(`xxxx failed to calculate new version`);
       }
       if (!newVersion) {
         logger.debug(
@@ -141,12 +150,14 @@ async function bumpVersion(
 
       // update the file. Add it to the buckets if exists or create a new artifact update
       if (packageFiles[filePath]) {
+        logger.debug(`xxxx adding to packageFiles file ${filePath} and contents ${newFileContents}`);
         packageFiles[filePath].push({
           type: 'addition',
           path: filePath,
           contents: newFileContents,
         });
       } else {
+        logger.debug(`xxxx smth different - adding to packageFiles file ${filePath} and contents ${newFileContents}`);
         artifactFiles[filePath] ??= [];
         artifactFiles[filePath].push({
           type: 'addition',
